@@ -30,14 +30,10 @@ dev_dependencies:
 
 # The following section is specific to Flutter.
 flutter:
-
-  # The following line ensures that the Material Icons font is
-  # included with your application, so that you can use the icons in
-  # the material Icons class.
   uses-material-design: true
-  assets:
-    - assets/images/brooke-lark-385507-unsplash.jpg
-    - assets/images/g-logo.png
+  assets: # New
+    - assets/brooke-lark-385507-unsplash.jpg # New
+    - assets/g-logo.png
   fonts:
     - family: Merriweather
       fonts:
