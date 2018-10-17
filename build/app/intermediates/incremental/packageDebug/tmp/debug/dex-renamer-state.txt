@@ -1,4 +1,0 @@
-#Wed Oct 17 19:38:03 CEST 2018
-base.0=/home/hans/Development/flutter/recipes_app/build/app/intermediates/transforms/dexMerger/debug/0
-path.0=classes.dex
-renamed.0=classes.dex
