@@ -4,7 +4,7 @@ Simple Recipes App made in Flutter for a series of articles. You can find all a
 
 Branches are regarding to articles:
 
-01_introduction - [Simple Recipes App made in Flutter — Introduction](https://medium.com/@michael.krol)
+01_introduction - [Simple Recipes App made in Flutter — Introduction](https://medium.com/@michael.krol/simple-recipes-app-made-in-flutter-introduction-c80964167a19)
 
 ## Final result
 
