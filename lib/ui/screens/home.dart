@@ -1,9 +1,57 @@
 import 'package:flutter/material.dart';
 
-class HomeScreen extends StatelessWidget {
+import 'package:recipes_app/model/recipe.dart';
+import 'package:recipes_app/utils/store.dart';
+import 'package:recipes_app/ui/widgets/recipe_card.dart';
+
+class HomeScreen extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() => new HomeScreenState();
+}
+
+class HomeScreenState extends State<HomeScreen> {
+  List<Recipe> recipes = getRecipes();
+  List<String> userFavorites = getFavoritesIDs();
+
+  // Inactive widgets are going to call this method to
+  // signalize the parent widget HomeScreen to refresh the list view:
+  void _handleFavoritesListChanged(String recipeID) {
+    setState(() {
+      if (userFavorites.contains(recipeID)) {
+        userFavorites.remove(recipeID);
+      } else {
+        userFavorites.add(recipeID);
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    double _iconSize = 20.0;
+    Padding _buildRecipes(List<Recipe> recipesList) {
+      return Padding(
+          // Padding before and after the list view:
+          padding: const EdgeInsets.symmetric(vertical: 5.0),
+          child: Column(
+            children: <Widget>[
+              Expanded(
+                child: ListView.builder(
+                  itemCount: recipesList.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return new RecipeCard(
+                      recipe: recipesList[index],
+                      inFavorites:
+                          userFavorites.contains(recipesList[index].id),
+                      onFavoriteButtonPressed: _handleFavoritesListChanged,
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
+        );
+    }
+
+    const double _iconSize = 20.0;
 
     return DefaultTabController(
       length: 4,
@@ -12,7 +60,6 @@ class HomeScreen extends StatelessWidget {
           // We set Size equal to passed height (50.0) and infinite width:
           preferredSize: Size.fromHeight(50.0),
           child: AppBar(
-            backgroundColor: Colors.white,
             elevation: 2.0,
             bottom: TabBar(
               labelColor: Theme.of(context).indicatorColor,
@@ -28,11 +75,16 @@ class HomeScreen extends StatelessWidget {
         body: Padding(
           padding: EdgeInsets.all(5.0),
           child: TabBarView(
-            // Placeholders for content of the tabs:
             children: [
-              Center(child: Icon(Icons.restaurant)),
-              Center(child: Icon(Icons.local_drink)),
-              Center(child: Icon(Icons.favorite)),
+              _buildRecipes(recipes
+                  .where((recipe) => recipe.type == RecipeType.food)
+                  .toList()),
+              _buildRecipes(recipes
+                  .where((recipe) => recipe.type == RecipeType.drink)
+                  .toList()),
+              _buildRecipes(recipes
+                  .where((recipe) => userFavorites.contains(recipe.id))
+                  .toList()),
               Center(child: Icon(Icons.settings)),
             ],
           ),
