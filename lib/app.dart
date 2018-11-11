@@ -11,7 +11,6 @@ class RecipesApp extends StatelessWidget {
       title: 'Recipes',
       theme: buildTheme(),
       debugShowCheckedModeBanner: false,
-      initialRoute: '/login',
       routes: {
         '/': (context) => HomeScreen(),
         '/login': (context) => LoginScreen(),

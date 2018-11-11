@@ -16,6 +16,8 @@ dependencies:
   flutter:
     sdk: flutter
   duration: ^2.0.0
+  firebase_auth: ^0.6.2+1
+  google_sign_in: ^3.2.2
   cupertino_icons: ^0.1.2
 
 dev_dependencies:
