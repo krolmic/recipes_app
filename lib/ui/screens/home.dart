@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:recipes_app/model/recipe.dart';
 import 'package:recipes_app/utils/store.dart';
 import 'package:recipes_app/ui/widgets/recipe_card.dart';
+import 'package:recipes_app/model/state.dart';
+import 'package:recipes_app/state_widget.dart';
+import 'package:recipes_app/ui/screens/login.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -10,47 +13,11 @@ class HomeScreen extends StatefulWidget {
 }
 
 class HomeScreenState extends State<HomeScreen> {
+  StateModel appState;
   List<Recipe> recipes = getRecipes();
   List<String> userFavorites = getFavoritesIDs();
 
-  // Inactive widgets are going to call this method to
-  // signalize the parent widget HomeScreen to refresh the list view:
-  void _handleFavoritesListChanged(String recipeID) {
-    setState(() {
-      if (userFavorites.contains(recipeID)) {
-        userFavorites.remove(recipeID);
-      } else {
-        userFavorites.add(recipeID);
-      }
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    Padding _buildRecipes(List<Recipe> recipesList) {
-      return Padding(
-          // Padding before and after the list view:
-          padding: const EdgeInsets.symmetric(vertical: 5.0),
-          child: Column(
-            children: <Widget>[
-              Expanded(
-                child: ListView.builder(
-                  itemCount: recipesList.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return new RecipeCard(
-                      recipe: recipesList[index],
-                      inFavorites:
-                          userFavorites.contains(recipesList[index].id),
-                      onFavoriteButtonPressed: _handleFavoritesListChanged,
-                    );
-                  },
-                ),
-              ),
-            ],
-          ),
-        );
-    }
-
+  DefaultTabController _buildTabView({Widget body}) {
     const double _iconSize = 20.0;
 
     return DefaultTabController(
@@ -69,27 +36,92 @@ class HomeScreenState extends State<HomeScreen> {
                 Tab(icon: Icon(Icons.favorite, size: _iconSize)),
                 Tab(icon: Icon(Icons.settings, size: _iconSize)),
               ],
-            ),
+            ),  
           ),
         ),
         body: Padding(
           padding: EdgeInsets.all(5.0),
-          child: TabBarView(
-            children: [
-              _buildRecipes(recipes
-                  .where((recipe) => recipe.type == RecipeType.food)
-                  .toList()),
-              _buildRecipes(recipes
-                  .where((recipe) => recipe.type == RecipeType.drink)
-                  .toList()),
-              _buildRecipes(recipes
-                  .where((recipe) => userFavorites.contains(recipe.id))
-                  .toList()),
-              Center(child: Icon(Icons.settings)),
-            ],
-          ),
+          child: body,
         ),
       ),
     );
+  }
+
+  Widget _buildContent() {
+    if (appState.isLoading) {
+      return _buildTabView(
+        body: _buildLoadingIndicator(),
+      );
+    } else if (!appState.isLoading && appState.user == null) {
+      return new LoginScreen();
+    } else {
+      return _buildTabView(
+        body: _buildTabsContent(),
+      );
+    }
+  }
+
+  Center _buildLoadingIndicator() {
+    return Center(
+      child: new CircularProgressIndicator(),
+    );
+  }
+
+  TabBarView _buildTabsContent() {
+    Padding _buildRecipes(List<Recipe> recipesList) {
+      return Padding(
+        // Padding before and after the list view:
+        padding: const EdgeInsets.symmetric(vertical: 5.0),
+        child: Column(
+          children: <Widget>[
+            Expanded(
+              child: ListView.builder(
+                itemCount: recipesList.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return new RecipeCard(
+                    recipe: recipesList[index],
+                    inFavorites: userFavorites.contains(recipesList[index].id),
+                    onFavoriteButtonPressed: _handleFavoritesListChanged,
+                  );
+                },
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
+    return TabBarView(
+      children: [
+        _buildRecipes(
+            recipes.where((recipe) => recipe.type == RecipeType.food).toList()),
+        _buildRecipes(recipes
+            .where((recipe) => recipe.type == RecipeType.drink)
+            .toList()),
+        _buildRecipes(recipes
+            .where((recipe) => userFavorites.contains(recipe.id))
+            .toList()),
+        Center(child: Icon(Icons.settings)),
+      ],
+    );
+  }
+
+  // Inactive widgets are going to call this method to
+  // signalize the parent widget HomeScreen to refresh the list view:
+  void _handleFavoritesListChanged(String recipeID) {
+    setState(() {
+      if (userFavorites.contains(recipeID)) {
+        userFavorites.remove(recipeID);
+      } else {
+        userFavorites.add(recipeID);
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // Build the content depending on the state:
+    appState = StateWidget.of(context).state;
+    return _buildContent();
   }
 }
