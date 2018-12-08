@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:recipes_app/model/state.dart';
 import 'package:recipes_app/utils/auth.dart';
@@ -46,7 +47,6 @@ class _StateWidgetState extends State<StateWidget> {
 
   Future<Null> initUser() async {
     googleAccount = await getSignedInAccount(googleSignIn);
-
     if (googleAccount == null) {
       setState(() {
         state.isLoading = false;
@@ -56,15 +56,30 @@ class _StateWidgetState extends State<StateWidget> {
     }
   }
 
+  Future<List<String>> getFavorites() async {
+    DocumentSnapshot querySnapshot = await Firestore.instance
+        .collection('users')
+        .document(state.user.uid)
+        .get();
+    if (querySnapshot.data.containsKey('favorites') &&
+        querySnapshot.data['favorites'] is List) {
+      // Create a new List<String> from List<dynamic>
+      return List<String>.from(querySnapshot.data['favorites']);
+    }
+    return [];
+  }
+
   Future<Null> signInWithGoogle() async {
     if (googleAccount == null) {
       // Start the sign-in process:
       googleAccount = await googleSignIn.signIn();
     }
     FirebaseUser firebaseUser = await signIntoFirebase(googleAccount);
+    state.user = firebaseUser; // new
+    List<String> favorites = await getFavorites(); // new
     setState(() {
       state.isLoading = false;
-      state.user = firebaseUser;
+      state.favorites = favorites; // new
     });
   }
 
@@ -85,9 +100,9 @@ class _StateDataWidget extends InheritedWidget {
     @required Widget child,
     @required this.data,
   }) : super(key: key, child: child);
-  
+
   // Rebuild the widgets that inherit from this widget
-  // on every rebuild of _StateDataWidget: 
+  // on every rebuild of _StateDataWidget:
   @override
   bool updateShouldNotify(_StateDataWidget old) => true;
 }

@@ -18,6 +18,7 @@ dependencies:
   duration: ^2.0.0
   firebase_auth: ^0.6.2+1
   google_sign_in: ^3.2.2
+  cloud_firestore: ^0.8.2+3
   cupertino_icons: ^0.1.2
 
 dev_dependencies:
