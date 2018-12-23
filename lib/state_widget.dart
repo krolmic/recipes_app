@@ -61,7 +61,8 @@ class _StateWidgetState extends State<StateWidget> {
         .collection('users')
         .document(state.user.uid)
         .get();
-    if (querySnapshot.data.containsKey('favorites') &&
+    if (querySnapshot.exists &&
+        querySnapshot.data.containsKey('favorites') &&
         querySnapshot.data['favorites'] is List) {
       // Create a new List<String> from List<dynamic>
       return List<String>.from(querySnapshot.data['favorites']);
