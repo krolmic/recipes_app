@@ -53,7 +53,7 @@ class _DetailScreenState extends State<DetailScreen>
     return Scaffold(
       body: NestedScrollView(
         controller: _scrollController,
-        headerSliverBuilder: (BuildContext context, bool boxIsScrolled) {
+        headerSliverBuilder: (BuildContext context, bool innerViewIsScrolled) {
           return <Widget>[
             SliverAppBar(
               backgroundColor: Colors.white,
@@ -71,7 +71,7 @@ class _DetailScreenState extends State<DetailScreen>
               pinned: true,
               floating: true,
               elevation: 2.0,
-              forceElevated: boxIsScrolled,
+              forceElevated: innerViewIsScrolled,
               bottom: TabBar(
                 tabs: <Widget>[
                   Tab(text: "Home"),
