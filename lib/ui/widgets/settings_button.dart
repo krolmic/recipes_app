@@ -6,7 +6,7 @@ class SettingsButton extends StatelessWidget {
   final String caption;
   final Function onPressed;
 
-  SettingsButton({this.icon, this.title, this.caption, this.onPressed});
+  SettingsButton(this.icon, this.title, this.caption, this.onPressed);
 
   @override
   Widget build(BuildContext context) {
