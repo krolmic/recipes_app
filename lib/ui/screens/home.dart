@@ -72,10 +72,10 @@ class HomeScreenState extends State<HomeScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         SettingsButton(
-          icon: Icons.exit_to_app,
-          title: "Log out",
-          caption: appState.user.displayName,
-          onPressed: () async {
+          Icons.exit_to_app,
+          "Log out",
+          appState.user.displayName,
+          () async {
             await StateWidget.of(context).signOutOfGoogle();
           },
         ),
