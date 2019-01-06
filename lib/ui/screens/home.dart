@@ -74,7 +74,7 @@ class HomeScreenState extends State<HomeScreen> {
         SettingsButton(
           Icons.exit_to_app,
           "Log out",
-          "Your display name",
+          appState.user.displayName,
           () async {
             await StateWidget.of(context).signOutOfGoogle();
           },
