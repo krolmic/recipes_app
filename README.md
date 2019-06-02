@@ -12,7 +12,7 @@ Branches are regarding to articles:
 
 04_firestore - [Simple Recipes App made in Flutter  —  Firestore](https://medium.com/flutter-community/simple-recipes-app-made-in-flutter-firestore-f386722102da)
 
-05_settings - [Simple Recipes App made in Flutter — Detail View and Settings Widget](https://medium.com/flutter-community/simple-recipes-app-made-in-flutter-detail-view-and-settings-widget-9a7ca9ebec93)
+05_settings - [Simple Recipes App made in Flutter   —  Detail View and Settings Widget](https://medium.com/flutter-community/simple-recipes-app-made-in-flutter-detail-view-and-settings-widget-9a7ca9ebec93)
 
 ## Final result
 
