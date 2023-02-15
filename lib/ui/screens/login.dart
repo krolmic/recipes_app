@@ -26,7 +26,7 @@ class _LoginScreenState extends State<LoginScreen> {
     Text _buildText() {
       return Text(
         'Recipes',
-        style: Theme.of(context).textTheme.headline,
+        style: Theme.of(context).textTheme.headlineMedium,
         textAlign: TextAlign.center,
       );
     }

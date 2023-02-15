@@ -4,7 +4,7 @@ class SettingsButton extends StatelessWidget {
   final IconData icon;
   final String title;
   final String caption;
-  final Function onPressed;
+  final VoidCallback onPressed;
 
   SettingsButton(this.icon, this.title, this.caption, this.onPressed);
 

@@ -15,9 +15,9 @@ class HomeScreen extends StatefulWidget {
 }
 
 class HomeScreenState extends State<HomeScreen> {
-  StateModel appState;
+  late StateModel appState;
 
-  DefaultTabController _buildTabView({Widget body}) {
+  DefaultTabController _buildTabView({required Widget body}) {
     const double _iconSize = 20.0;
 
     return DefaultTabController(
@@ -74,7 +74,7 @@ class HomeScreenState extends State<HomeScreen> {
         SettingsButton(
           Icons.exit_to_app,
           "Log out",
-          appState.user.displayName,
+          appState.user!.displayName!,
           () async {
             await StateWidget.of(context).signOutOfGoogle();
           },
@@ -84,15 +84,12 @@ class HomeScreenState extends State<HomeScreen> {
   }
 
   TabBarView _buildTabsContent() {
-    Padding _buildRecipes({RecipeType recipeType, List<String> ids}) {
-      CollectionReference collectionReference =
-          Firestore.instance.collection('recipes');
+    Padding _buildRecipes({RecipeType? recipeType, List<String>? ids}) {
+      CollectionReference collectionReference = FirebaseFirestore.instance.collection('recipes');
       Stream<QuerySnapshot> stream;
       // The argument recipeType is set
       if (recipeType != null) {
-        stream = collectionReference
-            .where("type", isEqualTo: recipeType.index)
-            .snapshots();
+        stream = collectionReference.where("type", isEqualTo: recipeType.index).snapshots();
       } else {
         // Use snapshots of all recipes if recipeType has not been passed
         stream = collectionReference.snapshots();
@@ -107,21 +104,18 @@ class HomeScreenState extends State<HomeScreen> {
             Expanded(
               child: new StreamBuilder(
                 stream: stream,
-                builder: (BuildContext context,
-                    AsyncSnapshot<QuerySnapshot> snapshot) {
+                builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
                   if (!snapshot.hasData) return _buildLoadingIndicator();
                   return new ListView(
-                    children: snapshot.data.documents
+                    children: snapshot.data!.docs
                         // Check if the argument ids contains document ID if ids has been passed:
-                        .where((d) => ids == null || ids.contains(d.documentID))
-                        .map((document) {
-                      return new RecipeCard(
-                        recipe:
-                            Recipe.fromMap(document.data, document.documentID),
-                        inFavorites:
-                            appState.favorites.contains(document.documentID),
-                        onFavoriteButtonPressed: _handleFavoritesListChanged,
-                      );
+                        .where((d) => ids == null || ids.contains(d.id))
+                        .map((DocumentSnapshot document) {
+                          return new RecipeCard(
+                            recipe: Recipe.fromMap(document.data() as Map<String, dynamic>, document.id),
+                            inFavorites: appState.favorites.contains(document.id),
+                            onFavoriteButtonPressed: _handleFavoritesListChanged,
+                          );
                     }).toList(),
                   );
                 },
@@ -143,7 +137,7 @@ class HomeScreenState extends State<HomeScreen> {
   }
 
   void _handleFavoritesListChanged(String recipeID) {
-    updateFavorites(appState.user.uid, recipeID).then((result) {
+    updateFavorites(appState.user!.uid, recipeID).then((result) {
       if (result == true) {
         setState(() {
           if (!appState.favorites.contains(recipeID))

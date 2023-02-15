@@ -19,7 +19,7 @@ class RecipeTitle extends StatelessWidget {
         children: <Widget>[
           Text(
             recipe.name,
-            style: Theme.of(context).textTheme.title,
+            style: Theme.of(context).textTheme.titleMedium,
           ),
           // Empty space:
           SizedBox(height: 10.0),
@@ -29,7 +29,7 @@ class RecipeTitle extends StatelessWidget {
               SizedBox(width: 5.0),
               Text(
                 recipe.getDurationString,
-                style: Theme.of(context).textTheme.caption,
+                style: Theme.of(context).textTheme.bodySmall,
               ),
             ],
           ),

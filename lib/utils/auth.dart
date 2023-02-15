@@ -1,24 +1,27 @@
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-Future<GoogleSignInAccount> getSignedInAccount(
-    GoogleSignIn googleSignIn) async {
+Future<GoogleSignInAccount?> getSignedInAccount(GoogleSignIn googleSignIn) async {
   // Is the user already signed in?
-  GoogleSignInAccount account = googleSignIn.currentUser;
+  GoogleSignInAccount? account = googleSignIn.currentUser;
   // Try to sign in the previous user:
   if (account == null) {
-    account = await googleSignIn.signInSilently();
+    await googleSignIn.signInSilently();
   }
   return account;
 }
 
-Future<FirebaseUser> signIntoFirebase(
-    GoogleSignInAccount googleSignInAccount) async {
-  FirebaseAuth _auth = FirebaseAuth.instance;
-  GoogleSignInAuthentication googleAuth =
-      await googleSignInAccount.authentication;
-  return await _auth.signInWithGoogle(
-    accessToken: googleAuth.accessToken,
-    idToken: googleAuth.idToken,
+Future<UserCredential> signIntoFirebase(GoogleSignInAccount googleSignInAccount) async {
+  final GoogleSignInAccount? googleUser = await GoogleSignIn(clientId: '339099570080-jeunhfkt9s9mqf1urd3q3s1lsbp385b3.apps.googleusercontent.com').signIn();
+
+  // Obtain the auth details from the request
+  final GoogleSignInAuthentication? googleAuth = await googleUser?.authentication;
+
+  // Create a new credential
+  final credential = GoogleAuthProvider.credential(
+    accessToken: googleAuth?.accessToken,
+    idToken: googleAuth?.idToken,
   );
+
+  return await FirebaseAuth.instance.signInWithCredential(credential);
 }
