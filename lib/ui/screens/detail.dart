@@ -17,12 +17,11 @@ class DetailScreen extends StatefulWidget {
   _DetailScreenState createState() => _DetailScreenState();
 }
 
-class _DetailScreenState extends State<DetailScreen>
-    with SingleTickerProviderStateMixin {
-  TabController _tabController;
-  ScrollController _scrollController;
-  bool _inFavorites;
-  StateModel appState;
+class _DetailScreenState extends State<DetailScreen> with SingleTickerProviderStateMixin {
+  late TabController _tabController;
+  late ScrollController _scrollController;
+  late bool _inFavorites;
+  late StateModel appState;
 
   @override
   void initState() {
@@ -67,7 +66,7 @@ class _DetailScreenState extends State<DetailScreen>
                   ],
                 ),
               ),
-              expandedHeight: 340.0,
+              expandedHeight: 415.0,
               pinned: true,
               floating: true,
               elevation: 2.0,
@@ -92,7 +91,7 @@ class _DetailScreenState extends State<DetailScreen>
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          updateFavorites(appState.user.uid, widget.recipe.id).then((result) {
+          updateFavorites(appState.user!.uid, widget.recipe.id).then((result) {
             // Toggle "in favorites" if the result was successful.
             if (result) _toggleInFavorites();
           });
@@ -115,7 +114,7 @@ class IngredientsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<Widget> children = new List<Widget>();
+    List<Widget> children = <Widget>[];
     ingredients.forEach((item) {
       children.add(
         new Row(
@@ -147,7 +146,7 @@ class PreparationView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<Widget> textElements = List<Widget>();
+    List<Widget> textElements = <Widget>[];
     preparationSteps.forEach((item) {
       textElements.add(
         Text(item),

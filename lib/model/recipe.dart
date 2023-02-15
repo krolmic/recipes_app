@@ -15,25 +15,24 @@ class Recipe {
   final String imageURL;
 
   const Recipe({
-    this.id,
-    this.type,
-    this.name,
-    this.duration,
-    this.ingredients,
-    this.preparation,
-    this.imageURL,
+    required this.id,
+    required this.type,
+    required this.name,
+    required this.duration,
+    required this.ingredients,
+    required this.preparation,
+    required this.imageURL,
   });
 
   String get getDurationString => prettyDuration(this.duration);
 
-  Recipe.fromMap(Map<String, dynamic> data, String id)
-      : this(
-          id: id,
-          type: RecipeType.values[data['type']],
-          name: data['name'],
-          duration: Duration(minutes: data['duration']),
-          ingredients: new List<String>.from(data['ingredients']),
-          preparation: new List<String>.from(data['preparation']),
-          imageURL: data['image'],
-        );
+  Recipe.fromMap(Map<String, dynamic> data, String id) : this(
+    id: id,
+    type: RecipeType.values[data['type']],
+    name: data['name'],
+    duration: Duration(minutes: data['duration']),
+    ingredients: new List<String>.from(data['ingredients']),
+    preparation: new List<String>.from(data['preparation']),
+    imageURL: data['imageURL'],
+  );
 }

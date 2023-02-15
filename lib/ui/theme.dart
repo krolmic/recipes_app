@@ -5,22 +5,22 @@ ThemeData buildTheme() {
   // in this method:
   TextTheme _buildTextTheme(TextTheme base) {
     return base.copyWith(
-      headline: base.headline.copyWith(
+        headlineMedium: base.headlineMedium!.copyWith(
         fontFamily: 'Merriweather',
         fontSize: 40.0,
         color: const Color(0xFF807A6B),
       ),
       // Used for the recipes' title:
-      title: base.title.copyWith(
+        titleMedium: base.titleMedium!.copyWith(
         fontFamily: 'Merriweather',
         fontSize: 15.0,
         color: const Color(0xFF807A6B),
       ),
       // Used for the recipes' duration:
-      caption: base.caption.copyWith(
+        bodySmall: base.bodySmall!.copyWith(
         color: const Color(0xFFCCC5AF),
       ),
-      body1: base.body1.copyWith(color: const Color(0xFF807A6B))
+      bodyMedium: base.bodyMedium!.copyWith(color: const Color(0xFF807A6B))
     );
   }
 

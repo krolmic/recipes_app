@@ -9,20 +9,18 @@ import 'package:recipes_app/model/state.dart';
 import 'package:recipes_app/utils/auth.dart';
 
 class StateWidget extends StatefulWidget {
-  final StateModel state;
   final Widget child;
+  final StateModel? state;
 
   StateWidget({
-    @required this.child,
+    required this.child,
     this.state,
   });
 
   // Returns data of the nearest widget _StateDataWidget
   // in the widget tree.
   static _StateWidgetState of(BuildContext context) {
-    return (context.inheritFromWidgetOfExactType(_StateDataWidget)
-            as _StateDataWidget)
-        .data;
+    return context.dependOnInheritedWidgetOfExactType<_StateDataWidget>()!.data;
   }
 
   @override
@@ -30,15 +28,15 @@ class StateWidget extends StatefulWidget {
 }
 
 class _StateWidgetState extends State<StateWidget> {
-  StateModel state;
-  GoogleSignInAccount googleAccount;
+  late StateModel state;
+  GoogleSignInAccount? googleAccount;
   final GoogleSignIn googleSignIn = new GoogleSignIn();
 
   @override
   void initState() {
     super.initState();
     if (widget.state != null) {
-      state = widget.state;
+      state = widget.state!;
     } else {
       state = new StateModel(isLoading: true);
       initUser();
@@ -57,15 +55,15 @@ class _StateWidgetState extends State<StateWidget> {
   }
 
   Future<List<String>> getFavorites() async {
-    DocumentSnapshot querySnapshot = await Firestore.instance
+    DocumentSnapshot<Map<String, dynamic>> querySnapshot = await FirebaseFirestore.instance
         .collection('users')
-        .document(state.user.uid)
+        .doc(state.user!.uid)
         .get();
     if (querySnapshot.exists &&
-        querySnapshot.data.containsKey('favorites') &&
-        querySnapshot.data['favorites'] is List) {
+        querySnapshot.data()!.containsKey('favorites') &&
+        querySnapshot.data()!['favorites'] is List) {
       // Create a new List<String> from List<dynamic>
-      return List<String>.from(querySnapshot.data['favorites']);
+      return List<String>.from(querySnapshot.data()!['favorites']);
     }
     return [];
   }
@@ -75,8 +73,8 @@ class _StateWidgetState extends State<StateWidget> {
       // Start the sign-in process:
       googleAccount = await googleSignIn.signIn();
     }
-    FirebaseUser firebaseUser = await signIntoFirebase(googleAccount);
-    state.user = firebaseUser; // new
+    UserCredential firebaseUser = await signIntoFirebase(googleAccount!);
+    state.user = firebaseUser.user; // new
     List<String> favorites = await getFavorites(); // new
     setState(() {
       state.isLoading = false;
@@ -109,9 +107,9 @@ class _StateDataWidget extends InheritedWidget {
   final _StateWidgetState data;
 
   _StateDataWidget({
-    Key key,
-    @required Widget child,
-    @required this.data,
+    Key? key,
+    required Widget child,
+    required this.data,
   }) : super(key: key, child: child);
 
   // Rebuild the widgets that inherit from this widget

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 class GoogleSignInButton extends StatelessWidget {
-  GoogleSignInButton({this.onPressed});
+  GoogleSignInButton({required this.onPressed});
 
-  final Function onPressed;
+  final VoidCallback onPressed;
 
   @override
   Widget build(BuildContext context) {

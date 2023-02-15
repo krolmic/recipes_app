@@ -10,10 +10,11 @@ class RecipeCard extends StatelessWidget {
   final bool inFavorites;
   final Function onFavoriteButtonPressed;
 
-  RecipeCard(
-      {@required this.recipe,
-      @required this.inFavorites,
-      @required this.onFavoriteButtonPressed});
+  RecipeCard({
+    required this.recipe,
+    required this.inFavorites,
+    required this.onFavoriteButtonPressed
+  });
 
   @override
   Widget build(BuildContext context) {
